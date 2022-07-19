@@ -4,6 +4,8 @@ import java.util.Base64;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,10 @@ public class UserService {
 
 	@Autowired
 	UserRepository userRepository;
-	@Autowired
-	private ModelMapper mapper;
+
+	private ModelMapper mapper = new ModelMapper();
+
+	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 	/**
 	 * 
@@ -53,14 +57,17 @@ public class UserService {
 	public UserResponse insertUserInfo(UserRequest userRequest) throws NullPointerException {
 		User user = new User();
 		mapper.map(userRequest, user);
+		logger.info("email{}", user.getEmailId());
 		String encodedPassWord = Base64.getEncoder().encodeToString(userRequest.getPassWord().getBytes());
 		user.setPassWord(encodedPassWord);
-		userRepository.save(user);
+		user = userRepository.save(user);
 		UserResponse userResponse = new UserResponse();
 		if (user.getEmailId().isEmpty()) {
 			throw new CustomException("Email id is a required field");
 		} else {
 			mapper.map(user, userResponse);
+			logger.info("email{}", user.getEmailId());
+			logger.info("email{}", userResponse.getEmailId());
 			return userResponse;
 		}
 	}

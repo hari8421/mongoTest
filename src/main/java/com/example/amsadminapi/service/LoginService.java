@@ -1,9 +1,7 @@
 package com.example.amsadminapi.service;
 
-import java.sql.SQLClientInfoException;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.NoSuchElementException;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -17,8 +15,6 @@ import com.example.amsadminapi.exception.CustomException;
 import com.example.amsadminapi.repository.UserRepository;
 import com.example.amsadminapi.request.LoginRequest;
 import com.example.amsadminapi.response.LoginResponse;
-
-import jdk.internal.org.jline.utils.Log;
 
 /**
  * 
@@ -39,11 +35,10 @@ public class LoginService {
 	 * @param loginRequest
 	 * @return response
 	 */
-	public LoginResponse getUserByEmailIdAndPassWord(LoginRequest loginRequest)
-			throws Exception {
+	public LoginResponse getUserByEmailIdAndPassWord(LoginRequest loginRequest) throws Exception {
 		LoginResponse response = new LoginResponse();
 		try {
-			logger.info("Inside getUserByEmailIdAndPassWord with user:{}",loginRequest.getEmailId());
+			logger.info("Inside getUserByEmailIdAndPassWord with user:{}", loginRequest.getEmailId());
 			String decryptPassWord = Base64.getEncoder().encodeToString(loginRequest.getPassWord().getBytes());
 
 			ArrayList<User> userinfo = userRepository.findByEmailIdAndPassWord(loginRequest.getEmailId(),
